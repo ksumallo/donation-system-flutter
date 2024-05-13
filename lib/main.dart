@@ -1,4 +1,5 @@
 import 'package:final_proj/firebase_options.dart';
+import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -14,7 +15,11 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: const <SingleChildWidget>[],
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<Organizations>(
+          create: (context) => ListOrganizations(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
