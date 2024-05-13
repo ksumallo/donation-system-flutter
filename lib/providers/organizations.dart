@@ -32,14 +32,102 @@ final class ListOrganizations extends Organizations {
     Organization(
       id: "test-1",
       name: "Test Organization 1",
-      description: "Sample Text",
       openForDonations: true,
     ),
     Organization(
       id: "test-2",
       name: "Test Organization 2",
-      description: "Sample Text",
       openForDonations: false,
+    ),
+    Organization(
+      id: "test-3",
+      name: "Test Organization 3",
+      openForDonations: true
+    ),
+    Organization(
+      id: "test-4",
+      name: "Test Organization 4",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-5",
+      name: "Test Organization 5",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-6",
+      name: "Test Organization 6",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-7",
+      name: "Test Organization 7",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-8",
+      name: "Test Organization 8",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-9",
+      name: "Test Organization 9",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-10",
+      name: "Test Organization 10",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-11",
+      name: "Test Organization 11",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-12",
+      name: "Test Organization 12",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-13",
+      name: "Test Organization 13",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-14",
+      name: "Test Organization 14",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-15",
+      name: "Test Organization 15",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-16",
+      name: "Test Organization 16",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-17",
+      name: "Test Organization 17",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-18",
+      name: "Test Organization 18",
+      openForDonations: true,
+    ),
+    Organization(
+      id: "test-19",
+      name: "Test Organization 19",
+      openForDonations: false,
+    ),
+    Organization(
+      id: "test-20",
+      name: "Test Organization 20",
+      openForDonations: true,
     ),
   ];
 
@@ -54,12 +142,12 @@ final class ListOrganizations extends Organizations {
     int pageSize,
   ) {
     return Future.sync(() {
-      int start = (pageNumber - 1) * pageSize;
+      int start = pageNumber * pageSize;
       int end = start + pageSize;
 
       if (start >= _organizations.length) {
         return UnmodifiableListView<Organization>([]);
-      } else if (end > _organizations.length) {
+      } else if (end >= _organizations.length) {
         return UnmodifiableListView(_organizations.skip(start));
       } else {
         return UnmodifiableListView(_organizations.getRange(start, end));
