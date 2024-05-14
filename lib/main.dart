@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:final_proj/pages/user_profile.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -57,16 +58,20 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
-              builder: (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+              builder: (context) =>
+                  const MyHomePage(title: 'Flutter Demo Home Page'),
             );
           case '/user-profile':
             return MaterialPageRoute(
-              builder:(context) => UserProfile(user: UserDetails(
+              builder: (context) => UserProfile(
+                user: UserDetails(
                   name: 'Nathan Campo',
                   username: 'nccampo',
                   addresses: ['1242 Baltazar, Olongapo', '9387, Los Banos'],
                   contactNumber: '+63928191911',
-                )),
+                ),
+              ),
+            );
           case '/organizations':
             return MaterialPageRoute(
               builder: (context) => const OrganizationList(),
