@@ -1,4 +1,6 @@
 import 'package:final_proj/firebase_options.dart';
+import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -14,7 +16,11 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: const <SingleChildWidget>[],
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<Organizations>(
+          create: (context) => ListOrganizations(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -53,6 +59,10 @@ class MyApp extends StatelessWidget {
           case '/':
             return MaterialPageRoute(
               builder: (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+            );
+          case '/organizations':
+            return MaterialPageRoute(
+              builder: (context) => const OrganizationList(),
             );
           default:
             return null;
