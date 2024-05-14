@@ -96,15 +96,3 @@ class UserProfile extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: UserProfile(
-      user: UserDetails(
-        name: 'John Doe',
-        username: 'johndoe123',
-        addresses: ['123 Main St', '456 Elm St'],
-        contactNumber: '+1234567890',
-      ),
-    ),
-  ));
-}
