@@ -1,3 +1,4 @@
+import 'package:final_proj/pages/organization_list.dart';
 import 'package:flutter/material.dart';
 
 class UserDetails {
@@ -30,6 +31,7 @@ class UserProfile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Existing content
             Row(
               children: [
                 Icon(Icons.account_circle, size: 72),
@@ -89,10 +91,26 @@ class UserProfile extends StatelessWidget {
               user.contactNumber,
               style: TextStyle(fontSize: 16),
             ),
+            // additional donate button
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrganizationList(),
+                      ),
+                    );
+                  },
+                  child: Text('Donate'),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
