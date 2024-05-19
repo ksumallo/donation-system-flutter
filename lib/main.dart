@@ -1,4 +1,3 @@
-import 'package:final_proj/donate/donate_page.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/providers/organizations.dart';
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/user-profile',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
@@ -77,10 +76,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const OrganizationList(),
             );
-          case '/donate':
-            return MaterialPageRoute(
-              builder: (context) => const DonatePage(),
-            );
+          
           default:
             return null;
         }

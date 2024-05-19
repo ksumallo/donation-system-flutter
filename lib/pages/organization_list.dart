@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:final_proj/donate/donate_page.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,14 @@ class _OrganizationListState extends State<OrganizationList> {
                         title: Text(snapshot.data![index].name),
                         subtitle: Text(snapshot.data![index].description),
                         titleAlignment: ListTileTitleAlignment.center,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DonatePage(organization: snapshot.data![index]),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),

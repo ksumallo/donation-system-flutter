@@ -2,12 +2,13 @@ import 'package:final_proj/donate/date_picker.dart';
 import 'package:final_proj/donate/dropdown_list.dart';
 import 'package:final_proj/donate/text_field.dart';
 import 'package:final_proj/donate/time_picker.dart';
+import 'package:final_proj/entities/organization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class DonatePage extends StatefulWidget {
-  const DonatePage({super.key});
+  const DonatePage({super.key, required Organization organization});
 
   @override
   State<DonatePage> createState() => _DonatePageState();
