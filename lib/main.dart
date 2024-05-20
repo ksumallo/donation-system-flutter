@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => UserProfile(
                 user: User(
+                  uid: 'nccampo',
                   name: 'Nathan Campo',
                   username: 'nccampo',
                   addresses: ['1242 Baltazar, Olongapo', '9387, Los Banos'],
