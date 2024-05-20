@@ -14,9 +14,9 @@ abstract class UserRepository {
 }
 
 class FirestoreUserRepository implements UserRepository {
-  FirebaseFirestore _db;
+  final FirebaseFirestore _db;
 
-  FirestoreUserRepository(this._db);
+  const FirestoreUserRepository(this._db);
 
   @override
   Future<void> createUser(User user) async {
@@ -25,6 +25,11 @@ class FirestoreUserRepository implements UserRepository {
         "name",
         (value) => user.name,
         ifAbsent: () => user.name,
+      )
+      ..update(
+        "username",
+        (value) => user.username,
+        ifAbsent: () => user.username,
       )
       ..update(
         "addresses",
@@ -50,11 +55,11 @@ class FirestoreUserRepository implements UserRepository {
     final users = _db.collection("users");
     if ((await users.get())
         .docs
-        .any((element) => element.id == user.username)) {
+        .any((element) => element.data()["username"] == user.username)) {
       throw Exception("User already exists");
     }
 
-    await users.doc(user.username).set(data);
+    await users.doc(user.uid).set(data);
   }
 
   @override
@@ -65,8 +70,9 @@ class FirestoreUserRepository implements UserRepository {
     return snapshot.docs.map((doc) {
       final data = doc.data();
       return User(
+        uid: doc.id,
         name: data["name"] as String,
-        username: doc.id,
+        username: data["username"] as String,
         addresses: data["addresses"] as List<String>,
         contactNumber: data["contact_number"] as String,
         donations: [],
@@ -76,9 +82,11 @@ class FirestoreUserRepository implements UserRepository {
   }
 
   @override
-  Future<User> getUser(String username) async {
+  Future<User> getUser(String uid) async {
     final users = _db.collection("users");
-    final snapshot = await users.doc(username).get();
+    final snapshot = await users.get().then((docs) {
+      return docs.docs.firstWhere((element) => element.id == uid);
+    });
 
     if (!snapshot.exists) {
       throw Exception("User does not exist");
@@ -86,8 +94,9 @@ class FirestoreUserRepository implements UserRepository {
 
     final data = snapshot.data();
     return User(
-      name: data!["name"] as String,
-      username: username,
+      uid: snapshot.id,
+      name: data["name"] as String,
+      username: data["username"] as String,
       addresses: data["addresses"] as List<String>,
       contactNumber: data["contact_number"] as String,
       donations: [],
@@ -98,7 +107,7 @@ class FirestoreUserRepository implements UserRepository {
   @override
   Future<void> updateUser(User user) async {
     final users = _db.collection("users");
-    final snapshot = users.doc(user.username);
+    final snapshot = users.doc(user.uid);
 
     if (!(await snapshot.get()).exists) {
       throw Exception("User does not exist");

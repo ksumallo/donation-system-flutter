@@ -2,6 +2,7 @@ import 'package:final_proj/entities/donations.dart';
 import 'package:final_proj/entities/organization.dart';
 
 class User {
+  final String uid;
   final String name;
   final String username;
   final List<String> addresses;
@@ -10,6 +11,7 @@ class User {
   final List<Organization> organizations;
 
   User({
+    required this.uid,
     required this.name,
     required this.username,
     required this.addresses,
