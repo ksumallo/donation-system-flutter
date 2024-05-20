@@ -1,22 +1,11 @@
+import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:flutter/material.dart';
 
-class UserDetails {
-  final String name;
-  final String username;
-  final List<String> addresses;
-  final String contactNumber;
 
-  UserDetails({
-    required this.name,
-    required this.username,
-    required this.addresses,
-    required this.contactNumber,
-  });
-}
 
 class UserProfile extends StatelessWidget {
-  final UserDetails user;
+  final User user;
 
   const UserProfile({Key? key, required this.user}) : super(key: key);
 

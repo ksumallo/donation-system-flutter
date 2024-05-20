@@ -1,3 +1,4 @@
+import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/providers/organizations.dart';
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
           case '/user-profile':
             return MaterialPageRoute(
               builder: (context) => UserProfile(
-                user: UserDetails(
+                user: User(
                   name: 'Nathan Campo',
                   username: 'nccampo',
                   addresses: ['1242 Baltazar, Olongapo', '9387, Los Banos'],
