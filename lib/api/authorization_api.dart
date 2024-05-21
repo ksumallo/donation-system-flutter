@@ -7,8 +7,7 @@ class FirebaseAuthApi {
   final fb_auth.FirebaseAuth _auth;
   final UserProvider _userProvider;
 
-  FirebaseAuthApi(FirebaseApp app, this._userProvider)
-      : _auth = fb_auth.FirebaseAuth.instanceFor(app: app);
+  FirebaseAuthApi(this._auth, this._userProvider);
 
   Stream<User?> get authStateChanges async* {
     Stream<fb_auth.User?> stream = _auth.authStateChanges();
