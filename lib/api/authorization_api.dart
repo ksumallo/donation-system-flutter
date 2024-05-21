@@ -1,13 +1,13 @@
-import 'package:final_proj/api/user_repository.dart';
 import 'package:final_proj/entities/user.dart';
+import 'package:final_proj/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseAuthApi {
   final fb_auth.FirebaseAuth _auth;
-  final UserRepository _userRepository;
+  final UserProvider _userProvider;
 
-  FirebaseAuthApi(FirebaseApp app, this._userRepository)
+  FirebaseAuthApi(FirebaseApp app, this._userProvider)
       : _auth = fb_auth.FirebaseAuth.instanceFor(app: app);
 
   Stream<User?> get authStateChanges async* {
@@ -17,7 +17,7 @@ class FirebaseAuthApi {
       if (user == null) {
         yield null;
       } else {
-        yield await _userRepository.getUser(user.uid);
+        yield await _userProvider.getUserById(user.uid);
       }
     }
   }
@@ -37,7 +37,7 @@ class FirebaseAuthApi {
       throw Exception("Failed to sign in");
     }
 
-    User user = await _userRepository.getUser(uid);
+    User user = await _userProvider.getUserById(uid);
     return user;
   }
 
