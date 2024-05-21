@@ -5,6 +5,7 @@ import 'package:final_proj/api/firestore_organization_provider.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/pages/signin_screen.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:final_proj/providers/user_provider.dart';
@@ -83,9 +84,12 @@ class MyApp extends StatelessWidget {
           case '/':
             return MaterialPageRoute(
               builder: (context) =>
-                  const MyHomePage(title: 'Flutter Demo Home Page'),
+                  const SignInPage(),
             );
           case '/user-profile':
+            User user = settings.arguments as User;
+            return MaterialPageRoute(builder: (context) => UserProfile(user: user));
+          case '/user-profile-dev':
             return MaterialPageRoute(
               builder: (context) => UserProfile(
                 user: User(
