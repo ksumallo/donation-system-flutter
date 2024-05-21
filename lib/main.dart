@@ -70,12 +70,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     
     // TODO: Remove when proper redirect is complete
-    _listener = AppLifecycleListener(
-      onExitRequested: () async {
-        widget._auth.logout();
-        return AppExitResponse.exit;
-      }
-    );
+    // _listener = AppLifecycleListener(
+    //   onExitRequested: () async {
+    //     widget._auth.logout();
+    //     return AppExitResponse.exit;
+    //   }
+    // );
   }
 
   // This widget is the root of your application.
