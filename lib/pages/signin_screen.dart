@@ -1,4 +1,5 @@
 import 'package:final_proj/entities/user.dart';
+import 'package:final_proj/pages/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_proj/providers/auth_provider.dart';
@@ -18,6 +19,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthProvider>().logout();
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -31,7 +33,8 @@ class _SignInPageState extends State<SignInPage> {
                   emailField,
                   passwordField,
                   showSignInErrorMessage ? signInErrorMessage : Container(),
-                  submitButton
+                  submitButton,
+                  signUpButton
                 ],
               ),
             )),
@@ -106,5 +109,21 @@ class _SignInPageState extends State<SignInPage> {
           }
       },
       child: const Text("Sign In"));
-
+    Widget get signUpButton => Padding(
+            padding: const EdgeInsets.all(30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("No account yet?"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpPage()));
+                    },
+                    child: const Text("Sign Up"))
+              ],
+            ),
+          );
 }
