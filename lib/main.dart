@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_proj/api/firebase_auth_provider.dart';
+import 'package:final_proj/api/firestore_user_provider.dart';
+import 'package:final_proj/api/firestore_organization_provider.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/providers/auth_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
+import 'package:final_proj/providers/user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -11,15 +18,31 @@ import 'package:final_proj/pages/user_profile.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
+  FirebaseApp app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  var firestore = FirebaseFirestore.instanceFor(app: app);
+  var auth = fb_auth.FirebaseAuth.instanceFor(app: app);
+
+  UserProvider userProvider = FirestoreUserProvider(firestore);
+  OrganizationProvider organizationProvider = FirestoreOrganizationProvider(
+    firestore,
+    userProvider: userProvider,
+  );
+  AuthProvider authProvider = FirebaseAuthProvider(auth, userProvider);
 
   runApp(
     MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<Organizations>(
-          create: (context) => ListOrganizations(),
+        ChangeNotifierProvider(
+          create: (context) => organizationProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => userProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => authProvider,
         ),
       ],
       child: const MyApp(),
@@ -54,7 +77,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/user-profile',
+      initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
@@ -78,7 +101,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const OrganizationList(),
             );
-          
+
           default:
             return null;
         }
