@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:final_proj/entities/user.dart';
 import 'package:flutter/foundation.dart';
 
@@ -32,8 +34,24 @@ abstract class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<User>> getUsers() async {
-    return await getUsersINTERNAL();
+  Future<int> getPageCount(int pageSize) async {
+    List<User> users = await getUsersINTERNAL();
+    return (users.length / pageSize).ceil();
+  }
+
+  Future<UnmodifiableListView<User>> getUsers(int pageNumber, int pageSize) async {
+    List<User> users = await getUsersINTERNAL();
+
+    int startIndex = (pageNumber - 1) * pageSize;
+    if (startIndex >= users.length) {
+      return UnmodifiableListView([]);
+    }
+
+    if (startIndex + pageSize >= users.length) {
+      return UnmodifiableListView(users.skip(startIndex));
+    }
+
+    return UnmodifiableListView(users.getRange(startIndex, startIndex + pageSize));
   }
 
   Future<User> getUserById(String id) async {
