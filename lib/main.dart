@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/api/firebase_auth_provider.dart';
 import 'package:final_proj/api/firestore_user_provider.dart';
@@ -46,13 +48,35 @@ Future<void> main() async {
           create: (context) => authProvider,
         ),
       ],
-      child: const MyApp(),
+      child: MyApp(authProvider),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  final AuthProvider _auth;
+
+  const MyApp(this._auth, {super.key});
+
+  @override
+  State createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final AppLifecycleListener _listener;
+  
+  @override
+  void initState() {
+    super.initState();
+    
+    // TODO: Remove when proper redirect is complete
+    // _listener = AppLifecycleListener(
+    //   onExitRequested: () async {
+    //     widget._auth.logout();
+    //     return AppExitResponse.exit;
+    //   }
+    // );
+  }
 
   // This widget is the root of your application.
   @override
