@@ -20,7 +20,7 @@ class _OrganizationListState extends State<OrganizationList> {
 
   Widget _getBottomNavigator(BuildContext context) {
     return FutureBuilder(
-      future: context.read<Organizations>().getPageCount(_pageSize),
+      future: context.read<OrganizationProvider>().getPageCount(_pageSize),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(
@@ -80,8 +80,8 @@ class _OrganizationListState extends State<OrganizationList> {
       ),
       body: FutureBuilder<UnmodifiableListView<Organization>>(
           future: context
-              .watch<Organizations>()
-              .getOrganizations(_pageNumber, _pageSize),
+              .watch<OrganizationProvider>()
+              .getPage(_pageNumber, _pageSize),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
