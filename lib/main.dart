@@ -1,5 +1,7 @@
+import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
+import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<Organizations>(
-          create: (context) => ListOrganizations(),
+        ChangeNotifierProvider<OrganizationProvider>(
+          create: (context) => OrganizationProvider(),
         ),
       ],
       child: const MyApp(),
@@ -36,31 +38,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      initialRoute: '/user-profile',
+      initialRoute: '/donate',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
               builder: (context) =>
                   const MyHomePage(title: 'Flutter Demo Home Page'),
+            );
+          case '/donate':
+            return MaterialPageRoute(
+              builder: (context) => DonatePage(
+                organization: Organization(),
+              ),
             );
           case '/user-profile':
             return MaterialPageRoute(
@@ -78,7 +71,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const OrganizationList(),
             );
-          
+
           default:
             return null;
         }

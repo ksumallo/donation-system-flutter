@@ -32,6 +32,9 @@ class _MyTextFieldState extends State<MyTextField> {
     return Container(
       margin: const EdgeInsets.all(8.0),
       child: TextFormField(
+        keyboardType: (widget.inputType == MyTextFieldType.number)
+            ? TextInputType.number
+            : TextInputType.text,
         enabled: widget.enabled,
         initialValue: widget.initialValue,
         validator: (value) {

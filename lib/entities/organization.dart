@@ -1,4 +1,4 @@
-import 'package:final_proj/entities/donations.dart';
+import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/user.dart';
 
 class Organization {
@@ -9,8 +9,8 @@ class Organization {
   final List<User> users;
 
   Organization({
-    required this.id,
-    required this.name,
+    this.id = '1312',
+    this.name = "(Organization)",
     this.description = "",
     this.openForDonations = false,
     this.users = const [],

@@ -4,16 +4,29 @@ import 'package:final_proj/entities/organization.dart';
 import 'package:flutter/material.dart';
 
 /// Provides access to a collection of [Organization]s that can be updated.
-abstract class OrganizationProvider with ChangeNotifier {
-  Future<void> addINTERNAL(Organization organization);
 
-  Future<void> removeINTERNAL(Organization organization);
+class OrganizationProvider with ChangeNotifier {
+  Future<void> addINTERNAL(Organization organization) {
+    throw UnimplementedError();
+  }
 
-  Future<void> updateINTERNAL(Organization organization);
+  Future<void> removeINTERNAL(Organization organization) {
+    throw UnimplementedError();
+  }
 
-  Future<List<Organization>> getAllINTERNAL();
+  Future<void> updateINTERNAL(Organization organization) {
+    throw UnimplementedError();
+  }
 
-  Future<Organization> getByIdINTERNAL(String id);
+  Future<List<Organization>> getAllINTERNAL() {
+    throw UnimplementedError();
+  }
+
+  Future<Organization> getByIdINTERNAL(String id) {
+    throw UnimplementedError();
+  }
+
+  OrganizationProvider();
 
   /// Returns the number of pages of organizations in the collection if each page contained
   /// [pageSize] organizations.
@@ -32,7 +45,8 @@ abstract class OrganizationProvider with ChangeNotifier {
     List<Organization> organizations = await getAllINTERNAL();
 
     int startIndex = (pageNumber - 1) * pageSize;
-    return UnmodifiableListView(organizations.getRange(startIndex, startIndex + pageSize));
+    return UnmodifiableListView(
+        organizations.getRange(startIndex, startIndex + pageSize));
   }
 
   /// Adds [organization] to the collection.

@@ -2,8 +2,6 @@ import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:flutter/material.dart';
 
-
-
 class UserProfile extends StatelessWidget {
   final User user;
 
@@ -30,7 +28,8 @@ class UserProfile extends StatelessWidget {
                   children: [
                     Text(
                       user.name,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Username: ${user.username}',

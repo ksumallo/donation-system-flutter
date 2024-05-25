@@ -43,7 +43,6 @@ class _MyTimePickerState extends State<MyTimePicker> {
               currTime = value;
               controller.text = (value).format(context);
             }
-            ;
           });
         },
         decoration: InputDecoration(
