@@ -45,26 +45,5 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
               //     const SnackBar(content: Text("Category added"))),
               child: const Text("Add"))
         ]);
-
-    // return AlertDialog(
-    //   title: Text('Add Category'),
-    //   content: TextField(),
-    //   actions: [
-    //     FlatButton(
-    //       child: Text('Cancel'),
-    //       onPressed: () {
-    //         Navigator.of(context).pop();
-    //       },
-    //     ),
-    //     FlatButton(
-    //       child: Text('Add'),
-    //       onPressed: () {
-    //         String categoryName = _categoryController.text.trim();
-    //         // Perform category addition logic here
-    //         Navigator.of(context).pop();
-    //       },
-    //     ),
-    //   ],
-    // );
   }
 }

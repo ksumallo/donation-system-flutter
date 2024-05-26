@@ -85,7 +85,7 @@ class _OrganizationListState extends State<OrganizationList> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
-                children: [
+                children: [ 
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,

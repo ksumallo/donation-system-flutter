@@ -108,13 +108,13 @@ class _DonatePageState extends State<DonatePage> {
                     Flexible(
                       child: MyDatePicker(
                         label: "Delivery Date",
-                        onTextChange: (date) => donation.date = date,
+                        onDateChanged: (date) => donation.date = date,
                       ),
                     ),
                     Flexible(
                       child: MyTimePicker(
                         label: "Delivery Time",
-                        onTextChange: (time) => donation.time = time,
+                        onTimeChanged: (time) => donation.time = time,
                       ),
                     ),
                   ],

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      initialRoute: '/donate',
+      initialRoute: '/organizations',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
