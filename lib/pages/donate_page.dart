@@ -9,6 +9,7 @@ import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -54,10 +55,7 @@ class _DonatePageState extends State<DonatePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Donate"),
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         automaticallyImplyLeading: true,
       ),
       body: Stack(children: [
@@ -72,17 +70,16 @@ class _DonatePageState extends State<DonatePage> {
                     children: [
                       const Padding(
                         padding:
-                        EdgeInsets.only(top: 12.0, left: 16.0, bottom: 4.0),
+                            EdgeInsets.only(top: 12.0, left: 16.0, bottom: 4.0),
                         child: Text("Item Categories"),
                       ),
                       ..._itemCategories.map(
-                            (category) =>
-                            CheckboxListTile(
-                              title: Text(category.name),
-                              value: category.selected,
-                              onChanged: (t) =>
-                                  setState(() => category.selected = t!),
-                            ),
+                        (category) => CheckboxListTile(
+                          title: Text(category.name),
+                          value: category.selected,
+                          onChanged: (t) =>
+                              setState(() => category.selected = t!),
+                        ),
                       ),
                       ListTile(
                         leading: const Icon(Icons.add),
@@ -90,18 +87,15 @@ class _DonatePageState extends State<DonatePage> {
                         onTap: () {
                           showDialog(
                             context: context,
-                            builder: (context) =>
-                                AddCategoryDialog(
-                                  onAccept: (newCategory) =>
-                                      setState(
-                                            () {
-                                          _itemCategories
-                                              .add(
-                                              ItemCategory(name: newCategory));
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                ),
+                            builder: (context) => AddCategoryDialog(
+                              onAccept: (newCategory) => setState(
+                                () {
+                                  _itemCategories
+                                      .add(ItemCategory(name: newCategory));
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
                           );
                         },
                       )
@@ -179,8 +173,7 @@ class _DonatePageState extends State<DonatePage> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
-                                              'Image uploaded: ${value!
-                                                  .path}')));
+                                              'Image uploaded: ${value!.path}')));
                                   setState(() => _uploadedImage = value);
                                 });
                               },
@@ -224,9 +217,7 @@ class _DonatePageState extends State<DonatePage> {
               },
             ),
             FutureBuilder(
-                future: context
-                    .watch<AuthProvider>()
-                    .currentUser,
+                future: context.watch<AuthProvider>().currentUser,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return FilledButton.icon(
@@ -261,21 +252,21 @@ class _DonatePageState extends State<DonatePage> {
                       },
                     );
                   } else if (snapshot.connectionState == ConnectionState.done) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("You are not logged in."),
-                        duration: Duration(seconds: 15),
-                      ),
-                    );
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("You are not logged in."),
+                          duration: Duration(seconds: 15),
+                        ),
+                      );
+                    });
                   }
 
                   return FilledButton.icon(
                       icon: const Icon(Icons.send),
                       label: const Text("Donate"),
-                      onPressed: null
-                  );
-                }
-            )
+                      onPressed: null);
+                })
           ],
         ),
       ),
