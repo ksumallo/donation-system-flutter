@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/api/firebase_auth_provider.dart';
 import 'package:final_proj/api/firestore_user_provider.dart';
 import 'package:final_proj/api/firestore_organization_provider.dart';
+import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/donate_page.dart';
@@ -88,10 +89,13 @@ class _MyAppState extends State<MyApp> {
               builder: (context) =>
                   const SignInPage(),
             );
-          case '/donate':
+          case '/donate-dev':
             return MaterialPageRoute(
               builder: (context) => DonatePage(
-                organization: Organization(),
+                receipient: Organization(
+                  id: "test-org",
+                  name: "Test Organization",
+                ),
               ),
             );
           case '/user-profile':
