@@ -25,7 +25,7 @@ class _OrganizationDAO {
       name: data['name'] as String,
       description: data['description'] as String,
       openForDonations: data['openForDonations'] as bool,
-      userIds: data['users'] as List<String>,
+      userIds: List<String>.from(data['users']),
     );
   }
 

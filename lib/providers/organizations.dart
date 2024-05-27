@@ -34,9 +34,9 @@ abstract class OrganizationProvider with ChangeNotifier {
   ) async {
     List<Organization> organizations = await getAllINTERNAL();
 
-    int startIndex = (pageNumber - 1) * pageSize;
-    return UnmodifiableListView(
-        organizations.getRange(startIndex, startIndex + pageSize));
+    int startIndex = pageNumber * pageSize;
+
+    return UnmodifiableListView(organizations.skip(startIndex).take(pageSize));
   }
 
   /// Adds [organization] to the collection.
