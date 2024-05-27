@@ -9,8 +9,8 @@ class Organization {
   final List<User> users;
 
   Organization({
-    this.id = '1312',
-    this.name = "(Organization)",
+    required this.id,
+    required this.name,
     this.description = "",
     this.openForDonations = false,
     this.users = const [],
