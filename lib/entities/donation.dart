@@ -10,7 +10,7 @@ class Donation {
   List<String> itemCategories;
   bool isPickup;
   double weight;
-  String weightUnit; 
+  String weightUnit;
 
   String date = '';
   String time = '';
@@ -21,15 +21,16 @@ class Donation {
 
   int status;
 
-  Donation(
-      {this.itemCategories = const [],
-      this.isPickup = true,
-      this.weight = 0,
-      this.weightUnit = 'kg',
-      this.image,
-      this.addresses = const [],
-      this.contact = '',
-      this.status = 0});
+  Donation({
+    this.itemCategories = const [],
+    this.isPickup = true,
+    this.weight = 0,
+    this.weightUnit = 'kg',
+    this.image,
+    this.addresses = const [],
+    this.contact = '',
+    this.status = 0,
+  });
 
   debug() {
     log('itemCategories: $itemCategories');
