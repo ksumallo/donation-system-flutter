@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:final_proj/donate/donate_page.dart';
+import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +85,7 @@ class _OrganizationListState extends State<OrganizationList> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
-                children: [
+                children: [ 
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,

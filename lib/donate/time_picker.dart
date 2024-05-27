@@ -7,12 +7,12 @@ class MyTimePicker extends StatefulWidget {
   final bool enabled;
   final String label;
   final MyTimePickerType inputType;
-  final Function(String)? onTextChange;
+  final Function(String)? onTimeChanged;
 
   const MyTimePicker(
       {super.key,
       this.label = '',
-      this.onTextChange,
+      this.onTimeChanged,
       this.inputType = MyTimePickerType.text,
       this.enabled = true});
 
@@ -42,8 +42,8 @@ class _MyTimePickerState extends State<MyTimePicker> {
             if (value != null) {
               currTime = value;
               controller.text = (value).format(context);
+              widget.onTimeChanged?.call(controller.text);
             }
-            ;
           });
         },
         decoration: InputDecoration(
