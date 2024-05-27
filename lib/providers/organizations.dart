@@ -5,26 +5,16 @@ import 'package:flutter/material.dart';
 
 /// Provides access to a collection of [Organization]s that can be updated.
 
-class OrganizationProvider with ChangeNotifier {
-  Future<void> addINTERNAL(Organization organization) {
-    throw UnimplementedError();
-  }
+abstract class OrganizationProvider with ChangeNotifier {
+  Future<void> addINTERNAL(Organization organization);
 
-  Future<void> removeINTERNAL(Organization organization) {
-    throw UnimplementedError();
-  }
+  Future<void> removeINTERNAL(Organization organization);
 
-  Future<void> updateINTERNAL(Organization organization) {
-    throw UnimplementedError();
-  }
+  Future<void> updateINTERNAL(Organization organization);
 
-  Future<List<Organization>> getAllINTERNAL() {
-    throw UnimplementedError();
-  }
+  Future<List<Organization>> getAllINTERNAL();
 
-  Future<Organization> getByIdINTERNAL(String id) {
-    throw UnimplementedError();
-  }
+  Future<Organization> getByIdINTERNAL(String id);
 
   OrganizationProvider();
 
