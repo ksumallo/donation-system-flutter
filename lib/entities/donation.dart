@@ -7,10 +7,8 @@ import 'package:image_picker/image_picker.dart';
 class Donation {
   static const List<String> weightUnits = ['kg', 'lb'];
 
-  List<String> itemCategories;
-  bool isPickup;
-  double weight;
-  String weightUnit;
+  final User donor;
+  final Organization receipient;
 
   String date = '';
   String time = '';
