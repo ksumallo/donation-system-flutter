@@ -10,7 +10,7 @@ class Donation {
   List<String> itemCategories;
   bool isPickup;
   double weight;
-  String weightUnit; // 0 - kg, 1 - lb
+  String weightUnit; 
 
   String date = '';
   String time = '';
