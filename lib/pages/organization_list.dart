@@ -101,7 +101,9 @@ class _OrganizationListState extends State<OrganizationList> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DonatePage(organization: snapshot.data![index]),
+                              builder: (context) => DonatePage(
+                                receipient: snapshot.data![index],
+                              ),
                             ),
                           );
                         },

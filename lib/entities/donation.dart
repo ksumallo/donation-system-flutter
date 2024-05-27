@@ -2,7 +2,17 @@
 
 import 'dart:developer';
 
+import 'package:final_proj/entities/user.dart';
+import 'package:final_proj/entities/organization.dart';
 import 'package:image_picker/image_picker.dart';
+
+enum DonationStatus {
+  pending,
+  confirmed,
+  scheduledForPickup,
+  complete,
+  canceled,
+}
 
 class Donation {
   static const List<String> weightUnits = ['kg', 'lb'];
@@ -10,24 +20,31 @@ class Donation {
   final User donor;
   final Organization receipient;
 
-  String date = '';
+  final List<String> itemCategories;
+  final bool isPickup;
+  final double weight;
+  final String weightUnit;
+
+  final String date = '';
   String time = '';
 
-  XFile? image;
-  List<String> addresses;
-  String contact;
+  final XFile image;
+  final List<String> addresses;
+  final String contact;
 
-  int status;
+  final DonationStatus status;
 
   Donation({
-    this.itemCategories = const [],
-    this.isPickup = true,
-    this.weight = 0,
-    this.weightUnit = 'kg',
-    this.image,
-    this.addresses = const [],
-    this.contact = '',
-    this.status = 0,
+    required this.donor,
+    required this.receipient,
+    required this.itemCategories,
+    required this.isPickup,
+    required this.weight,
+    required this.weightUnit,
+    required this.image,
+    required this.addresses,
+    required this.contact,
+    required this.status,
   });
 
   debug() {
