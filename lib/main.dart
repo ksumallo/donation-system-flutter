@@ -1,9 +1,18 @@
-import 'package:final_proj/entities/organization.dart';
+import 'dart:ui';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_proj/api/firebase_auth_provider.dart';
+import 'package:final_proj/api/firestore_user_provider.dart';
+import 'package:final_proj/api/firestore_organization_provider.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
 import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/pages/signin_screen.dart';
+import 'package:final_proj/providers/auth_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
+import 'package:final_proj/providers/user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -13,24 +22,54 @@ import 'package:final_proj/pages/user_profile.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
+  FirebaseApp app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  var firestore = FirebaseFirestore.instanceFor(app: app);
+  var auth = fb_auth.FirebaseAuth.instanceFor(app: app);
+
+  UserProvider userProvider = FirestoreUserProvider(firestore);
+  OrganizationProvider organizationProvider = FirestoreOrganizationProvider(
+    firestore,
+    userProvider: userProvider,
+  );
+  AuthProvider authProvider = FirebaseAuthProvider(auth, userProvider);
 
   runApp(
     MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<OrganizationProvider>(
-          create: (context) => OrganizationProvider(),
+        ChangeNotifierProvider(
+          create: (context) => organizationProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => userProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => authProvider,
         ),
       ],
-      child: const MyApp(),
+      child: MyApp(authProvider),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  final AuthProvider _auth;
+
+  const MyApp(this._auth, {super.key});
+
+  @override
+  State createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final AppLifecycleListener _listener;
+  
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override
@@ -47,7 +86,7 @@ class MyApp extends StatelessWidget {
           case '/':
             return MaterialPageRoute(
               builder: (context) =>
-                  const MyHomePage(title: 'Flutter Demo Home Page'),
+                  const SignInPage(),
             );
           case '/donate':
             return MaterialPageRoute(
@@ -56,6 +95,9 @@ class MyApp extends StatelessWidget {
               ),
             );
           case '/user-profile':
+            User user = settings.arguments as User;
+            return MaterialPageRoute(builder: (context) => UserProfile(user: user));
+          case '/user-profile-dev':
             return MaterialPageRoute(
               builder: (context) => UserProfile(
                 user: User(

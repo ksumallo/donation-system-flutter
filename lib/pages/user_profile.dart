@@ -1,6 +1,8 @@
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserProfile extends StatelessWidget {
   final User user;
@@ -12,6 +14,15 @@ class UserProfile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              context.read<AuthProvider>().logout();
+              Navigator.popAndPushNamed(context, '/');
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
