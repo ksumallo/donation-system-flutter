@@ -61,23 +61,30 @@ class _DonatePageState extends State<DonatePage> {
                             EdgeInsets.only(top: 12.0, left: 16.0, bottom: 4.0),
                         child: Text("Item Categories"),
                       ),
-                      ..._itemCategories.map((category) => CheckboxListTile(
+                      ..._itemCategories.map(
+                        (category) => CheckboxListTile(
                           title: Text(category.name),
                           value: category.selected,
                           onChanged: (t) =>
-                              setState(() => category.selected = t!))),
+                              setState(() => category.selected = t!),
+                        ),
+                      ),
                       ListTile(
                         leading: const Icon(Icons.add),
                         title: const Text("Add option"),
                         onTap: () {
                           showDialog(
-                              context: context,
-                              builder: (context) => AddCategoryDialog(
-                                  onAccept: (newCategory) => setState(() {
-                                        _itemCategories.add(
-                                            ItemCategory(name: newCategory));
-                                        Navigator.pop(context);
-                                      })));
+                            context: context,
+                            builder: (context) => AddCategoryDialog(
+                              onAccept: (newCategory) => setState(
+                                () {
+                                  _itemCategories
+                                      .add(ItemCategory(name: newCategory));
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          );
                         },
                       )
                     ],
@@ -96,10 +103,11 @@ class _DonatePageState extends State<DonatePage> {
                     ),
                     Flexible(
                       child: MyDropdownList(
-                          choices: Donation.weightUnits,
-                          onItemSelected: (choice) {
-                            donation.weightUnit = Donation.weightUnits[choice];
-                          }),
+                        choices: Donation.weightUnits,
+                        onItemSelected: (choice) {
+                          donation.weightUnit = Donation.weightUnits[choice];
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -120,12 +128,12 @@ class _DonatePageState extends State<DonatePage> {
                   ],
                 ),
                 Visibility(
-                    visible: donation.isPickup,
-                    child: MyTextField(
-                      label: "Address",
-                      onTextChange: (address) =>
-                          donation.addresses.add(address),
-                    )),
+                  visible: donation.isPickup,
+                  child: MyTextField(
+                    label: "Address",
+                    onTextChange: (address) => donation.addresses = [address],
+                  ),
+                ),
                 MyTextField(
                   label: "Contact Number",
                   inputType: MyTextFieldType.number,
@@ -141,21 +149,22 @@ class _DonatePageState extends State<DonatePage> {
                           children: [
                             const Text("Photo of items to donate"),
                             FilledButton.tonalIcon(
-                                icon: const Icon(Icons.add_a_photo),
-                                label: const Text("Add Photo"),
-                                onPressed: () {
-                                  ImagePicker picker = ImagePicker();
-                                  Future<XFile?> file = picker.pickImage(
-                                      source: ImageSource.gallery);
+                              icon: const Icon(Icons.add_a_photo),
+                              label: const Text("Add Photo"),
+                              onPressed: () {
+                                ImagePicker picker = ImagePicker();
+                                Future<XFile?> file = picker.pickImage(
+                                    source: ImageSource.gallery);
 
-                                  file.then((value) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Image uploaded: ${value!.path}')));
-                                    setState(() => donation.image = value);
-                                  });
-                                })
+                                file.then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Image uploaded: ${value!.path}')));
+                                  setState(() => donation.image = value);
+                                });
+                              },
+                            )
                           ],
                         ),
                         if (donation.image != null)
