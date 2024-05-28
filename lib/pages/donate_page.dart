@@ -8,6 +8,7 @@ import 'package:final_proj/donate/time_picker.dart';
 import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/providers/auth_provider.dart';
+import 'package:final_proj/providers/donation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
@@ -239,6 +240,8 @@ class _DonatePageState extends State<DonatePage> {
                           isPickup: _isPickup,
                           weight: double.parse(_weight),
                           weightUnit: _weightUnit,
+                          date: _date,
+                          time: _time,
                           image: _uploadedImage!,
                           addresses: _isPickup ? [_address] : [],
                           contact: _contact,
@@ -246,6 +249,10 @@ class _DonatePageState extends State<DonatePage> {
                         );
 
                         donation.debug();
+
+                        context
+                            .read<DonationProvider>()
+                            .add(donation);
 
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Donation created")));

@@ -26,6 +26,10 @@ abstract class OrganizationProvider with ChangeNotifier {
     return (organizations.length / pageSize).ceil();
   }
 
+  Future<Organization> getById(String id) async {
+    return await getByIdINTERNAL(id);
+  }
+
   /// Returns the organizations on page [pageNumber] of the collection if each page contained
   /// [pageSize] organizations.
   Future<UnmodifiableListView<Organization>> getPage(

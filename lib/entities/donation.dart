@@ -17,6 +17,8 @@ enum DonationStatus {
 class Donation {
   static const List<String> weightUnits = ['kg', 'lb'];
 
+  final String? id;
+
   final User donor;
   final Organization receipient;
 
@@ -25,8 +27,8 @@ class Donation {
   final double weight;
   final String weightUnit;
 
-  final String date = '';
-  String time = '';
+  final String date;
+  final String time;
 
   final XFile image;
   final List<String> addresses;
@@ -41,10 +43,13 @@ class Donation {
     required this.isPickup,
     required this.weight,
     required this.weightUnit,
+    required this.date,
+    required this.time,
     required this.image,
     required this.addresses,
     required this.contact,
     required this.status,
+    this.id,
   });
 
   debug() {

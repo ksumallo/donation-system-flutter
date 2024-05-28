@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/api/firebase_auth_provider.dart';
+import 'package:final_proj/api/firebase_storage_api.dart';
+import 'package:final_proj/api/firestore_donation_provider.dart';
 import 'package:final_proj/api/firestore_user_provider.dart';
 import 'package:final_proj/api/firestore_organization_provider.dart';
 import 'package:final_proj/entities/organization.dart';
@@ -11,9 +13,12 @@ import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/pages/signin_screen.dart';
 import 'package:final_proj/providers/auth_provider.dart';
+import 'package:final_proj/providers/cloud_storage_provider.dart';
+import 'package:final_proj/providers/donation_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:final_proj/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +34,9 @@ Future<void> main() async {
 
   var firestore = FirebaseFirestore.instanceFor(app: app);
   var auth = fb_auth.FirebaseAuth.instanceFor(app: app);
+  final firebaseStorage = FirebaseStorage.instanceFor(app: app);
+
+  CloudStorageProvider cloudStorageProvider = FirebaseStorageProvider(firebaseStorage);
 
   UserProvider userProvider = FirestoreUserProvider(firestore);
   OrganizationProvider organizationProvider = FirestoreOrganizationProvider(
@@ -36,6 +44,12 @@ Future<void> main() async {
     userProvider: userProvider,
   );
   AuthProvider authProvider = FirebaseAuthProvider(auth, userProvider);
+  DonationProvider donationProvider = FirestoreDonationProvider(
+    firestore: firestore,
+    userProvider: userProvider,
+    organizationProvider: organizationProvider,
+    cloudStorage: cloudStorageProvider,
+  );
 
   runApp(
     MultiProvider(
@@ -48,6 +62,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => authProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => donationProvider,
         ),
       ],
       child: MyApp(authProvider),
