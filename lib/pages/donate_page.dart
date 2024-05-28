@@ -7,11 +7,17 @@ import 'package:final_proj/donate/text_field.dart';
 import 'package:final_proj/donate/time_picker.dart';
 import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/organization.dart';
+import 'package:final_proj/providers/auth_provider.dart';
+import 'package:final_proj/providers/donation_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class DonatePage extends StatefulWidget {
-  const DonatePage({super.key, required Organization organization});
+  final Organization receipient;
+
+  const DonatePage({super.key, required this.receipient});
 
   @override
   State<DonatePage> createState() => _DonatePageState();
@@ -27,8 +33,15 @@ class ItemCategory {
 enum DonationMethod { pickUp, dropOff }
 
 class _DonatePageState extends State<DonatePage> {
-  Donation donation = Donation();
   XFile? _uploadedImage;
+  String _weight = "";
+  String _weightUnit = "kg";
+  String _date = "";
+  String _time = "";
+  bool _isPickup = true;
+  String _address = "";
+  String _contact = "";
+
   DonationMethod selectedMethod = DonationMethod.pickUp;
 
   final List<ItemCategory> _itemCategories = [
@@ -61,23 +74,30 @@ class _DonatePageState extends State<DonatePage> {
                             EdgeInsets.only(top: 12.0, left: 16.0, bottom: 4.0),
                         child: Text("Item Categories"),
                       ),
-                      ..._itemCategories.map((category) => CheckboxListTile(
+                      ..._itemCategories.map(
+                        (category) => CheckboxListTile(
                           title: Text(category.name),
                           value: category.selected,
                           onChanged: (t) =>
-                              setState(() => category.selected = t!))),
+                              setState(() => category.selected = t!),
+                        ),
+                      ),
                       ListTile(
                         leading: const Icon(Icons.add),
                         title: const Text("Add option"),
                         onTap: () {
                           showDialog(
-                              context: context,
-                              builder: (context) => AddCategoryDialog(
-                                  onAccept: (newCategory) => setState(() {
-                                        _itemCategories.add(
-                                            ItemCategory(name: newCategory));
-                                        Navigator.pop(context);
-                                      })));
+                            context: context,
+                            builder: (context) => AddCategoryDialog(
+                              onAccept: (newCategory) => setState(
+                                () {
+                                  _itemCategories
+                                      .add(ItemCategory(name: newCategory));
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                          );
                         },
                       )
                     ],
@@ -90,16 +110,18 @@ class _DonatePageState extends State<DonatePage> {
                       child: MyTextField(
                         label: "Weight",
                         inputType: MyTextFieldType.number,
-                        onTextChange: (weight) =>
-                            donation.weight = double.tryParse(weight) ?? 0.0,
+                        onTextChange: (value) {
+                          _weight = value;
+                        },
                       ),
                     ),
                     Flexible(
                       child: MyDropdownList(
-                          choices: Donation.weightUnits,
-                          onItemSelected: (choice) {
-                            donation.weightUnit = Donation.weightUnits[choice];
-                          }),
+                        choices: Donation.weightUnits,
+                        onItemSelected: (choice) {
+                          _weightUnit = Donation.weightUnits[choice];
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -108,28 +130,28 @@ class _DonatePageState extends State<DonatePage> {
                     Flexible(
                       child: MyDatePicker(
                         label: "Delivery Date",
-                        onDateChanged: (date) => donation.date = date,
+                        onDateChanged: (date) => _date = date,
                       ),
                     ),
                     Flexible(
                       child: MyTimePicker(
                         label: "Delivery Time",
-                        onTimeChanged: (time) => donation.time = time,
+                        onTimeChanged: (time) => _time = time,
                       ),
                     ),
                   ],
                 ),
                 Visibility(
-                    visible: donation.isPickup,
-                    child: MyTextField(
-                      label: "Address",
-                      onTextChange: (address) =>
-                          donation.addresses.add(address),
-                    )),
+                  visible: _isPickup,
+                  child: MyTextField(
+                    label: "Address",
+                    onTextChange: (address) => _address = address,
+                  ),
+                ),
                 MyTextField(
                   label: "Contact Number",
                   inputType: MyTextFieldType.number,
-                  onTextChange: (contact) => donation.contact = contact,
+                  onTextChange: (contact) => _contact = contact,
                 ),
                 Card.outlined(
                   child: Padding(
@@ -141,25 +163,26 @@ class _DonatePageState extends State<DonatePage> {
                           children: [
                             const Text("Photo of items to donate"),
                             FilledButton.tonalIcon(
-                                icon: const Icon(Icons.add_a_photo),
-                                label: const Text("Add Photo"),
-                                onPressed: () {
-                                  ImagePicker picker = ImagePicker();
-                                  Future<XFile?> file = picker.pickImage(
-                                      source: ImageSource.gallery);
+                              icon: const Icon(Icons.add_a_photo),
+                              label: const Text("Add Photo"),
+                              onPressed: () {
+                                ImagePicker picker = ImagePicker();
+                                Future<XFile?> file = picker.pickImage(
+                                    source: ImageSource.gallery);
 
-                                  file.then((value) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Image uploaded: ${value!.path}')));
-                                    setState(() => donation.image = value);
-                                  });
-                                })
+                                file.then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Image uploaded: ${value!.path}')));
+                                  setState(() => _uploadedImage = value);
+                                });
+                              },
+                            )
                           ],
                         ),
-                        if (donation.image != null)
-                          Image.file(File(donation.image!.path))
+                        if (_uploadedImage != null)
+                          Image.file(File(_uploadedImage!.path))
                       ],
                     ),
                   ),
@@ -190,25 +213,67 @@ class _DonatePageState extends State<DonatePage> {
               onSelectionChanged: (selected) {
                 setState(() {
                   selectedMethod = selected.first;
-                  donation.isPickup = selectedMethod == DonationMethod.pickUp;
+                  _isPickup = selectedMethod == DonationMethod.pickUp;
                 });
               },
             ),
-            FilledButton.icon(
-              icon: const Icon(Icons.send),
-              label: const Text("Donate"),
-              onPressed: () {
-                donation.itemCategories = _itemCategories
-                    .where((category) => category.selected)
-                    .map((category) => category.name)
-                    .toList();
+            FutureBuilder(
+                future: context.watch<AuthProvider>().currentUser,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return FilledButton.icon(
+                      icon: const Icon(Icons.send),
+                      label: const Text("Donate"),
+                      onPressed: () {
+                        final itemCategories = _itemCategories
+                            .where((category) => category.selected)
+                            .map((category) => category.name)
+                            .toList();
 
-                donation.debug();
+                        Donation donation = Donation(
+                          donor: snapshot.data!,
+                          receipient: widget.receipient,
+                          itemCategories: _itemCategories
+                              .where((category) => category.selected)
+                              .map((category) => category.name)
+                              .toList(growable: false),
+                          isPickup: _isPickup,
+                          weight: double.parse(_weight),
+                          weightUnit: _weightUnit,
+                          date: _date,
+                          time: _time,
+                          image: _uploadedImage!,
+                          addresses: _isPickup ? [_address] : [],
+                          contact: _contact,
+                          status: DonationStatus.pending,
+                        );
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Donation created")));
-              },
-            ),
+                        donation.debug();
+
+                        context
+                            .read<DonationProvider>()
+                            .add(donation);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Donation created")));
+                      },
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("You are not logged in."),
+                          duration: Duration(seconds: 15),
+                        ),
+                      );
+                    });
+                  }
+
+                  return FilledButton.icon(
+                      icon: const Icon(Icons.send),
+                      label: const Text("Donate"),
+                      onPressed: null);
+                })
           ],
         ),
       ),

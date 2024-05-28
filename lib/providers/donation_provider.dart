@@ -1,7 +1,21 @@
 import 'dart:collection';
 
-import 'package:final_proj/entities/donations.dart';
+import 'package:final_proj/entities/donation.dart';
+import 'package:final_proj/entities/organization.dart';
+import 'package:final_proj/entities/user.dart';
 import 'package:flutter/cupertino.dart';
+
+class DonationGroup {
+  final UnmodifiableListView<Donation> donations;
+  final int pageNumber;
+  final int pageCount;
+
+  DonationGroup({
+    required this.donations,
+    required this.pageNumber,
+    required this.pageCount,
+  });
+}
 
 abstract class DonationProvider with ChangeNotifier {
   Future<void> addINTERNAL(Donation donation);
@@ -10,23 +24,54 @@ abstract class DonationProvider with ChangeNotifier {
 
   Future<void> removeINTERNAL(Donation donation);
 
-  Future<List<Donation>> getAllINTERNAL();
+  Future<List<Donation>> getByDonorINTERNAL(User donor);
+
+  Future<List<Donation>> getByRecipientINTERNAL(Organization recipient);
 
   Future<Donation> getByIdINTERNAL(String id);
 
-  Future<int> getPageCount(int pageSize) async {
-    List<Donation> donations = await getAllINTERNAL();
-    return (donations.length / pageSize).ceil();
+  Future<DonationGroup> getByDonor(
+    User donor, {
+    required int pageNumber,
+    required int pageSize,
+  }) async {
+    if (pageNumber < 0) {
+      throw RangeError("Page number cannot be less than 0");
+    }
+    List<Donation> donations = await getByDonorINTERNAL(donor);
+    int pageCount = (donations.length / pageSize).ceil();
+
+    return DonationGroup(
+      donations: UnmodifiableListView(donations.skip(pageNumber * pageSize)),
+      pageNumber: pageNumber,
+      pageCount: pageCount,
+    );
   }
 
-  Future<UnmodifiableListView<Donation>> getPage(
-    int pageNumber,
-    int pageSize,
-  ) async {
-    List<Donation> donations = await getAllINTERNAL();
-    int startIndex = pageNumber * pageSize;
+  Future<DonationGroup> getByRecipient(
+    Organization recipient, {
+    required int pageNumber,
+    required int pageSize,
+  }) {
+    if (pageNumber < 0) {
+      throw RangeError("Page number cannot be less than 0");
+    }
+    return getByRecipientINTERNAL(recipient).then(
+      (donations) {
+        int pageCount = (donations.length / pageSize).ceil();
+        return DonationGroup(
+          donations: UnmodifiableListView(
+            donations.skip(pageNumber * pageSize).take(pageSize),
+          ),
+          pageNumber: pageNumber,
+          pageCount: pageCount,
+        );
+      },
+    );
+  }
 
-    return UnmodifiableListView(donations.getRange(startIndex, startIndex + pageSize));
+  Future<Donation> getById(String id) async {
+    return await getByIdINTERNAL(id);
   }
 
   Future<void> add(Donation donation) async {
