@@ -1,11 +1,16 @@
+import 'dart:developer';
+
+import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class UserProfile extends StatelessWidget {
-  final User user;
+class OrganizationProfile extends StatelessWidget {
+  final Organization org;
 
-  const UserProfile({super.key, required this.user});
+  const OrganizationProfile({super.key, required this.org});
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +27,15 @@ class UserProfile extends StatelessWidget {
                 children: [
                   const Icon(Icons.account_circle, size: 56),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        user.name,
+                        org.name,
                         style: TextStyle(
                             fontSize:
                                 Theme.of(context).textTheme.bodyLarge!.fontSize,
                             fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Username: ${user.username}',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+                      )
                     ],
                   ),
                 ],
@@ -45,18 +46,6 @@ class UserProfile extends StatelessWidget {
             avatar: Icon(Icons.home),
             label: Text('Addresses:'),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: user.addresses
-                .map((address) => Padding(
-                      padding: const EdgeInsets.only(left: 32),
-                      child: Text(
-                        address,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ))
-                .toList(),
-          ),
           const Row(
             children: [
               Icon(Icons.phone, size: 24),
@@ -66,10 +55,6 @@ class UserProfile extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
-          ),
-          Text(
-            user.contactNumber,
-            style: TextStyle(fontSize: 16),
           ),
           // additional donate button
           Expanded(
@@ -82,7 +67,7 @@ class UserProfile extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Donate'),
+              child: Text('Get verified'),
             ),
           ),
         ],
