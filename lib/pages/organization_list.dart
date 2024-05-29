@@ -76,64 +76,117 @@ class _OrganizationListState extends State<OrganizationList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Organizations"),
-      ),
-      body: FutureBuilder<UnmodifiableListView<Organization>>(
-        future: context
-            .watch<OrganizationProvider>()
-            .getPage(_pageNumber, _pageSize),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    Organization org = snapshot.data![index];
-                    return ListTile(
-                      leading: (org.openForDonations
-                          ? const Icon(Icons.check)
-                          : const Icon(Icons.close)),
-                      title: Text(org.name),
-                      subtitle: Text(org.description),
-                      titleAlignment: ListTileTitleAlignment.center,
-                      onTap: () {
-                        if (org.openForDonations) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DonatePage(
-                                receipient: org,
-                              ),
+    return FutureBuilder<UnmodifiableListView<Organization>>(
+      future:
+          context.watch<OrganizationProvider>().getPage(_pageNumber, _pageSize),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Organization org = snapshot.data![index];
+                  return ListTile(
+                    trailing: (org.openForDonations
+                        ? const Icon(Icons.check)
+                        : const Icon(Icons.close)),
+                    title: Text(org.name),
+                    subtitle: Text(org.description),
+                    titleAlignment: ListTileTitleAlignment.center,
+                    onTap: () {
+                      if (org.openForDonations) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DonatePage(
+                              receipient: org,
                             ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "This organization does not accept donations currently.",
-                              ),
-                              duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "This organization does not accept donations currently.",
                             ),
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
-                _getBottomNavigator(context),
-              ],
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+              _getBottomNavigator(context),
+            ],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text("Organizations"),
+    //   ),
+    //   body: FutureBuilder<UnmodifiableListView<Organization>>(
+    //     future: context
+    //         .watch<OrganizationProvider>()
+    //         .getPage(_pageNumber, _pageSize),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         return Column(
+    //           children: [
+    //             ListView.builder(
+    //               shrinkWrap: true,
+    //               itemCount: snapshot.data!.length,
+    //               itemBuilder: (context, index) {
+    //                 Organization org = snapshot.data![index];
+    //                 return ListTile(
+    //                   trailing: (org.openForDonations
+    //                       ? const Icon(Icons.check)
+    //                       : const Icon(Icons.close)),
+    //                   title: Text(org.name),
+    //                   subtitle: Text(org.description),
+    //                   titleAlignment: ListTileTitleAlignment.center,
+    //                   onTap: () {
+    //                     if (org.openForDonations) {
+    //                       Navigator.push(
+    //                         context,
+    //                         MaterialPageRoute(
+    //                           builder: (context) => DonatePage(
+    //                             receipient: org,
+    //                           ),
+    //                         ),
+    //                       );
+    //                     } else {
+    //                       ScaffoldMessenger.of(context).showSnackBar(
+    //                         const SnackBar(
+    //                           content: Text(
+    //                             "This organization does not accept donations currently.",
+    //                           ),
+    //                           duration: Duration(seconds: 2),
+    //                         ),
+    //                       );
+    //                     }
+    //                   },
+    //                 );
+    //               },
+    //             ),
+    //             _getBottomNavigator(context),
+    //           ],
+    //         );
+    //       } else {
+    //         return const Center(
+    //           child: CircularProgressIndicator(),
+    //         );
+    //       }
+    //     },
+    //   ),
+    // );
   }
 }

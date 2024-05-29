@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:final_proj/pages/user_profile.dart';
+import 'package:final_proj/pages/user_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +36,8 @@ Future<void> main() async {
   var auth = fb_auth.FirebaseAuth.instanceFor(app: app);
   final firebaseStorage = FirebaseStorage.instanceFor(app: app);
 
-  CloudStorageProvider cloudStorageProvider = FirebaseStorageProvider(firebaseStorage);
+  CloudStorageProvider cloudStorageProvider =
+      FirebaseStorageProvider(firebaseStorage);
 
   UserProvider userProvider = FirestoreUserProvider(firestore);
   OrganizationProvider organizationProvider = FirestoreOrganizationProvider(
@@ -83,7 +84,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final AppLifecycleListener _listener;
-  
+
   @override
   void initState() {
     super.initState();
@@ -98,13 +99,12 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      initialRoute: '/organizations',
+      initialRoute: '/user-profile-dev',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
-              builder: (context) =>
-                  const SignInPage(),
+              builder: (context) => const SignInPage(),
             );
           case '/donate-dev':
             return MaterialPageRoute(
@@ -117,10 +117,11 @@ class _MyAppState extends State<MyApp> {
             );
           case '/user-profile':
             User user = settings.arguments as User;
-            return MaterialPageRoute(builder: (context) => UserProfile(user: user));
+            return MaterialPageRoute(
+                builder: (context) => UserApp(user: user));
           case '/user-profile-dev':
             return MaterialPageRoute(
-              builder: (context) => UserProfile(
+              builder: (context) => UserApp(
                 user: User(
                   uid: 'nccampo',
                   name: 'Nathan Campo',
