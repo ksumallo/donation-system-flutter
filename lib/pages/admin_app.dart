@@ -30,12 +30,11 @@ class _AdminAppState extends State<AdminApp> {
 
   @override
   Widget build (BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Profile'),
+        title: Text(['Approved Organizations', 'Organizations For Approval', 'Donors'][_currentPage]),
         actions: [
-          if (_currentPage == 1) IconButton(
+          if (_currentPage == 2) IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
               context
@@ -76,10 +75,11 @@ class _AdminAppState extends State<AdminApp> {
   onNavigateTap(int i) {
     setState(() {
       _currentPage = i;
-      _pageController.animateToPage(
-          i,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic);
     });
+
+    _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic);
   }
 }

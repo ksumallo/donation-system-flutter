@@ -15,7 +15,7 @@ class DonorsList extends StatefulWidget {
 
 class _DonorsListState extends State<DonorsList> {
   int _pageNumber = 0;
-  int _pageSize = 5;
+  int _pageSize = 10;
 
   Widget _getBottomNavigator(BuildContext context) {
     return FutureBuilder(
