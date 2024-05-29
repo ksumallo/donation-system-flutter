@@ -7,6 +7,8 @@ import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../components/organization_list_item.dart';
+
 class OrganizationList extends StatefulWidget {
   const OrganizationList({super.key});
 
@@ -16,7 +18,7 @@ class OrganizationList extends StatefulWidget {
 
 class _OrganizationListState extends State<OrganizationList> {
   int _pageNumber = 0;
-  int _pageSize = 10;
+  final int _pageSize = 10;
 
   Widget _getBottomNavigator(BuildContext context) {
     return FutureBuilder(
@@ -88,32 +90,21 @@ class _OrganizationListState extends State<OrganizationList> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   Organization org = snapshot.data![index];
-                  return ListTile(
-                    trailing: (org.openForDonations
-                        ? const Icon(Icons.check)
-                        : const Icon(Icons.close)),
-                    title: Text(org.name),
-                    subtitle: Text(org.description),
-                    titleAlignment: ListTileTitleAlignment.center,
+
+                  return OrgListItem(
+                    key: Key(org.id),
+                    name: org.name,
+                    description: org.description,
+                    open: org.openForDonations,
                     onTap: () {
                       if (org.openForDonations) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DonatePage(
-                              receipient: org,
-                            ),
+                              builder: (context) => DonatePage(receipient: org),
                           ),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              "This organization does not accept donations currently.",
-                            ),
-                          ),
-                        );
-                      }
+                      } else showCannotDonateSnack(context);
                     },
                   );
                 },
@@ -188,5 +179,15 @@ class _OrganizationListState extends State<OrganizationList> {
     //     },
     //   ),
     // );
+  }
+
+  showCannotDonateSnack(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "This organization does not accept donations currently.",
+        ),
+      ),
+    );
   }
 }

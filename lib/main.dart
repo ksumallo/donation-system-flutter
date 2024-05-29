@@ -9,7 +9,9 @@ import 'package:final_proj/api/firestore_organization_provider.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
+import 'package:final_proj/pages/admin_app.dart';
 import 'package:final_proj/pages/donate_page.dart';
+import 'package:final_proj/pages/organization_app.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/pages/signin_screen.dart';
 import 'package:final_proj/providers/auth_provider.dart';
@@ -96,7 +98,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
       initialRoute: '/user-profile-dev',
@@ -136,6 +138,16 @@ class _MyAppState extends State<MyApp> {
               builder: (context) => const OrganizationList(),
             );
 
+          case '/organization':
+            return MaterialPageRoute(
+              // TODO: Remove dummy [Organization]
+              builder: (context) => OrganizationApp(org: Organization(name: 'Test Org', id: 'someRandomIdAasdkjadh')),
+            );
+
+          case '/admin':
+            return MaterialPageRoute(
+              builder: (context) => const AdminApp(),
+            );
           default:
             return null;
         }

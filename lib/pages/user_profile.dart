@@ -1,3 +1,4 @@
+import 'package:final_proj/components/profile_info_tile.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,15 @@ class UserProfile extends StatelessWidget {
           // Existing content
           Card.outlined(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  const Icon(Icons.account_circle, size: 56),
+                  Padding(
+                      padding: EdgeInsets.only(right: 12),
+                      child: Icon(
+                          Icons.account_circle,
+                          size: 72)
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -28,11 +34,10 @@ class UserProfile extends StatelessWidget {
                         user.name,
                         style: TextStyle(
                             fontSize:
-                                Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                Theme.of(context).textTheme.titleLarge!.fontSize,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Username: ${user.username}',
+                      Text(user.username,
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -41,50 +46,52 @@ class UserProfile extends StatelessWidget {
               ),
             ),
           ),
-          const Chip(
-            avatar: Icon(Icons.home),
-            label: Text('Addresses:'),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: user.addresses
-                .map((address) => Padding(
-                      padding: const EdgeInsets.only(left: 32),
-                      child: Text(
-                        address,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ))
-                .toList(),
-          ),
-          const Row(
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: user.addresses
+          //       .map((address) => Padding(
+          //             padding: const EdgeInsets.only(left: 32),
+          //             child: Text(
+          //               address,
+          //               style: const TextStyle(fontSize: 16),
+          //             ),
+          //           ))
+          //       .toList(),
+          // ),
+          ListView(
+            shrinkWrap: true,
             children: [
-              Icon(Icons.phone, size: 24),
-              SizedBox(width: 8),
-              Text(
-                'Contact Number:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              ...user.addresses.asMap().entries.map((address) =>
+                ProfileInfoTile(label: 'Address ${address.key+1}', value: address.value)),
+              ProfileInfoTile(label: "Contact", value: user.contactNumber)
             ],
           ),
-          Text(
-            user.contactNumber,
-            style: TextStyle(fontSize: 16),
-          ),
+          // const Row(
+          //   children: [
+          //     Icon(Icons.phone, size: 24),
+          //     SizedBox(width: 8),
+          //     Text(
+          //       'Contact Number:',
+          //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          //     ),
+          //   ],
+          // ),
+          // Text(
+          //   user.contactNumber,
+          //   style: TextStyle(fontSize: 16),
+          // ),
           // additional donate button
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OrganizationList(),
-                  ),
-                );
-              },
-              child: Text('Donate'),
-            ),
-          ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const OrganizationList(),
+          //       ),
+          //     );
+          //   },
+          //   child: Text('Donate'),
+          // ),
         ],
       ),
     );
