@@ -250,9 +250,7 @@ class _DonatePageState extends State<DonatePage> {
 
                         donation.debug();
 
-                        context
-                            .read<DonationProvider>()
-                            .add(donation);
+                        context.read<DonationProvider>().add(donation);
 
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Donation created")));

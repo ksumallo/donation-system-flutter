@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:final_proj/entities/organization.dart';
-import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/pages/donations_list.dart';
+import 'package:final_proj/pages/donors_list.dart';
 import 'package:final_proj/pages/organization_profile.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -40,8 +41,9 @@ class _OrganizationAppState extends State<OrganizationApp> {
             },
           )
         ],
+        automaticallyImplyLeading: false,
       ),
-      body: [const OrganizationList(), OrganizationProfile(org: widget.org)][_currentPage],
+      body: [DonationsList(), OrganizationProfile(org: widget.org)][_currentPage],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(

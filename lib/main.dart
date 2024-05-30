@@ -87,6 +87,30 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final AppLifecycleListener _listener;
 
+  // TODO: Remove dummy User
+  final User dummyUser = User(
+    uid: 'nccampo',
+    name: 'Lone Skum',
+    username: 'skum_lone_6767',
+    addresses: ['1242 Baltazar, Olongapo', '9387, Los Banos'],
+    contactNumber: '+63928191911',
+  );
+
+
+  // TODO: Remove dummy [Organization]
+  final Organization dummyOrg = Organization(
+    id: 'someRandomIdAasdkjadh',
+    name: 'Test Org',
+    description: 'Lorem ipsum dolor sit amet, '
+        'consectetur adipiscing elit. '
+        'Donec vehicula nulla vitae rhoncus convallis. '
+        'Suspendisse tempor lectus vitae hendrerit finibus. '
+        'Etiam vitae egestas magna. Donec sed faucibus nibh. '
+        'Nulla odio metus, pretium vel nunc id, tempus condimentum lectus. '
+        'Sed aliquam lobortis nulla, sit amet porta quam gravida vitae. '
+        'Maecenas non ullamcorper elit, a venenatis eros. '
+        'Sed condimentum massa sit amet felis molestie venenatis.');
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +125,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      initialRoute: '/user-profile-dev',
+      initialRoute: '/organization-dev',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
@@ -121,16 +145,10 @@ class _MyAppState extends State<MyApp> {
             User user = settings.arguments as User;
             return MaterialPageRoute(
                 builder: (context) => UserApp(user: user));
-          case '/user-profile-dev':
+          case '/user-dev':
             return MaterialPageRoute(
               builder: (context) => UserApp(
-                user: User(
-                  uid: 'nccampo',
-                  name: 'Nathan Campo',
-                  username: 'nccampo',
-                  addresses: ['1242 Baltazar, Olongapo', '9387, Los Banos'],
-                  contactNumber: '+63928191911',
-                ),
+                user: dummyUser,
               ),
             );
           case '/organizations':
@@ -138,10 +156,9 @@ class _MyAppState extends State<MyApp> {
               builder: (context) => const OrganizationList(),
             );
 
-          case '/organization':
+          case '/organization-dev':
             return MaterialPageRoute(
-              // TODO: Remove dummy [Organization]
-              builder: (context) => OrganizationApp(org: Organization(name: 'Test Org', id: 'someRandomIdAasdkjadh')),
+              builder: (context) => OrganizationApp(org: dummyOrg),
             );
 
           case '/admin':

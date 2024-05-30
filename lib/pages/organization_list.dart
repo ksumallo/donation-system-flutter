@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/entities/organization.dart';
+import 'package:final_proj/pages/organization_details.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +102,7 @@ class _OrganizationListState extends State<OrganizationList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DonatePage(receipient: org),
+                              builder: (context) => OrganizationDetails(org: org),
                           ),
                         );
                       } else showCannotDonateSnack(context);
