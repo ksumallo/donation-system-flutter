@@ -2,16 +2,23 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/api/firebase_auth_provider.dart';
+import 'package:final_proj/api/firebase_storage_api.dart';
+import 'package:final_proj/api/firestore_donation_provider.dart';
 import 'package:final_proj/api/firestore_user_provider.dart';
 import 'package:final_proj/api/firestore_organization_provider.dart';
+import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
+import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/pages/signin_screen.dart';
 import 'package:final_proj/providers/auth_provider.dart';
+import 'package:final_proj/providers/cloud_storage_provider.dart';
+import 'package:final_proj/providers/donation_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:final_proj/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +34,9 @@ Future<void> main() async {
 
   var firestore = FirebaseFirestore.instanceFor(app: app);
   var auth = fb_auth.FirebaseAuth.instanceFor(app: app);
+  final firebaseStorage = FirebaseStorage.instanceFor(app: app);
+
+  CloudStorageProvider cloudStorageProvider = FirebaseStorageProvider(firebaseStorage);
 
   UserProvider userProvider = FirestoreUserProvider(firestore);
   OrganizationProvider organizationProvider = FirestoreOrganizationProvider(
@@ -34,6 +44,12 @@ Future<void> main() async {
     userProvider: userProvider,
   );
   AuthProvider authProvider = FirebaseAuthProvider(auth, userProvider);
+  DonationProvider donationProvider = FirestoreDonationProvider(
+    firestore: firestore,
+    userProvider: userProvider,
+    organizationProvider: organizationProvider,
+    cloudStorage: cloudStorageProvider,
+  );
 
   runApp(
     MultiProvider(
@@ -46,6 +62,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => authProvider,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => donationProvider,
         ),
       ],
       child: MyApp(authProvider),
@@ -68,14 +87,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    
-    // TODO: Remove when proper redirect is complete
-    // _listener = AppLifecycleListener(
-    //   onExitRequested: () async {
-    //     widget._auth.logout();
-    //     return AppExitResponse.exit;
-    //   }
-    // );
   }
 
   // This widget is the root of your application.
@@ -84,31 +95,25 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/organizations',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
               builder: (context) =>
                   const SignInPage(),
+            );
+          case '/donate-dev':
+            return MaterialPageRoute(
+              builder: (context) => DonatePage(
+                receipient: Organization(
+                  id: "test-org",
+                  name: "Test Organization",
+                ),
+              ),
             );
           case '/user-profile':
             User user = settings.arguments as User;

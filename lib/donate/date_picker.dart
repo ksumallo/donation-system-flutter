@@ -8,13 +8,13 @@ class MyDatePicker extends StatefulWidget {
   final String label;
   final String initialValue;
   final MyDatePickerType inputType;
-  final Function(String)? onTextChange;
+  final Function(String)? onDateChanged;
 
   const MyDatePicker(
       {super.key,
       this.initialValue = '',
       this.label = '',
-      this.onTextChange,
+      this.onDateChanged,
       this.inputType = MyDatePickerType.text,
       this.enabled = true});
 
@@ -49,6 +49,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
             if (value != null) {
               currDate = value;
               controller.text = DateFormat("MMMM dd, yyyy").format(value);
+              widget.onDateChanged?.call(controller.text);
             }
           });
         },

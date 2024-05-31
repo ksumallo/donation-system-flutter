@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/providers/organizations.dart';
@@ -24,7 +25,7 @@ class _OrganizationDAO {
       name: data['name'] as String,
       description: data['description'] as String,
       openForDonations: data['openForDonations'] as bool,
-      userIds: data['users'] as List<String>,
+      userIds: List<String>.from(data['users']),
     );
   }
 
@@ -100,7 +101,8 @@ class FirestoreOrganizationProvider extends OrganizationProvider {
     List<Organization> organizationsList = [];
     for (var doc in snapshot.docs) {
       organizationsList.add(
-        await _OrganizationDAO.fromMap(doc.data()).toOrganization(doc.id, _userProvider),
+        await _OrganizationDAO.fromMap(doc.data())
+            .toOrganization(doc.id, _userProvider),
       );
     }
 
@@ -116,6 +118,7 @@ class FirestoreOrganizationProvider extends OrganizationProvider {
       throw Exception("Organization does not exist");
     }
 
-    return _OrganizationDAO.fromMap(snapshot.data()!).toOrganization(id, _userProvider);
+    return _OrganizationDAO.fromMap(snapshot.data()!)
+        .toOrganization(id, _userProvider);
   }
 }

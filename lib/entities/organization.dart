@@ -1,4 +1,4 @@
-import 'package:final_proj/entities/donations.dart';
+import 'package:final_proj/entities/donation.dart';
 import 'package:final_proj/entities/user.dart';
 
 class Organization {
