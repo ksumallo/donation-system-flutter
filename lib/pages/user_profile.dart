@@ -1,8 +1,9 @@
-import 'package:final_proj/entities/user.dart';
-import 'package:final_proj/pages/organization_list.dart';
-import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../entities/user.dart';
+import '../providers/auth_provider.dart';
+import 'organization_list.dart';
+import 'create_organization_page.dart';
 
 class UserProfile extends StatelessWidget {
   final User user;
@@ -29,7 +30,6 @@ class UserProfile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Existing content
             Row(
               children: [
                 Icon(Icons.account_circle, size: 72),
@@ -39,8 +39,7 @@ class UserProfile extends StatelessWidget {
                   children: [
                     Text(
                       user.name,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Username: ${user.username}',
@@ -90,20 +89,34 @@ class UserProfile extends StatelessWidget {
               user.contactNumber,
               style: TextStyle(fontSize: 16),
             ),
-            // additional donate button
             Expanded(
               child: Align(
-                alignment: Alignment.topCenter,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OrganizationList(),
-                      ),
-                    );
-                  },
-                  child: Text('Donate'),
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OrganizationList(),
+                          ),
+                        );
+                      },
+                      child: Text('Donate'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateOrganizationPage(),
+                          ),
+                        );
+                      },
+                      child: Text('Create Organization'),
+                    ),
+                  ],
                 ),
               ),
             ),
