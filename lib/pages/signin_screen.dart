@@ -113,18 +113,31 @@ class _SignInPageState extends State<SignInPage> {
         ),
       );
 
-  Widget get submitButton => ElevatedButton(
-      onPressed: () async {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          try {
-            await context.read<AuthProvider>().login(email!, password!);
-          } on Exception catch (e) {
-            print(e.toString());
+  String _errorString = "";
+
+  Widget get submitButton => Column(
+    children: <Widget>[
+      ElevatedButton(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+            try {
+              await context.read<AuthProvider>().login(email!, password!);
+            } on Exception catch (e) {
+              setState(() {
+                _errorString = e.toString();
+              });
+            }
           }
-        }
-      },
-      child: const Text("Sign In"));
+        },
+        child: const Text("Sign In")
+      ),
+      if (_errorString.isNotEmpty) Text(
+        _errorString,
+        style: const TextStyle(color: Colors.red),
+      ),
+    ],
+  );
 
   Widget get signUpButton => Padding(
         padding: const EdgeInsets.all(30),
