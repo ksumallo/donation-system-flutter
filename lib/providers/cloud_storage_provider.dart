@@ -3,7 +3,7 @@ import 'dart:io';
 abstract class CloudStorageProvider {
   /// Uploads a [file] to cloud storage, returning the path to the uploaded
   /// file.
-  Future<String> uploadFile(File file);
+  Future<String> uploadFile(File file, String path);
 
   Future<void> deleteFile(String cloudPath);
 

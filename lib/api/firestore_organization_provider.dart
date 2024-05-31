@@ -83,7 +83,9 @@ class FirestoreOrganizationProvider extends OrganizationProvider {
   @override
   Future<void> removeINTERNAL(Organization organization) async {
     final organizations = _db.collection("organizations");
-    await organizations.doc(organization.id).delete();
+    await organizations.doc(organization.id).update({
+      "deleted": true
+    });
   }
 
   @override
@@ -100,6 +102,9 @@ class FirestoreOrganizationProvider extends OrganizationProvider {
 
     List<Organization> organizationsList = [];
     for (var doc in snapshot.docs) {
+      Map<String, dynamic> data = doc.data();
+      if (data.containsKey("deleted") && data["deleted"] == true) continue;
+
       organizationsList.add(
         await _OrganizationDAO.fromMap(doc.data())
             .toOrganization(doc.id, _userProvider),
