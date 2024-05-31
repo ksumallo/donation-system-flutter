@@ -1,9 +1,10 @@
-import 'package:final_proj/entities/user.dart';
-import 'package:final_proj/pages/organization_list.dart';
-import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import '../entities/user.dart';
+import '../providers/auth_provider.dart';
+import 'organization_list.dart';
+import 'create_organization_page.dart';
 
 class UserProfile extends StatelessWidget {
   final User user;
@@ -113,17 +114,31 @@ class UserProfile extends StatelessWidget {
                   Expanded(
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OrganizationList(),
-                            ),
-                          );
-                        },
-                        child: const Text('Donate'),
-                      ),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OrganizationList(),
+                                ),
+                              );
+                            },
+                            child: const Text('Donate'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CreateOrganizationPage(),
+                                ),
+                              );
+                            },
+                            child: Text('Create Organization'),
+                          ),
+                      ],
                     ),
                   ),
                 ],
