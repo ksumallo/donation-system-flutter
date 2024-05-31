@@ -75,6 +75,10 @@ class FirestoreUserProvider extends UserProvider {
     final users = _db.collection("users");
     final snapshot = await users.get();
     return snapshot.docs
+        .where((doc) {
+          final data = doc.data();
+          return !(data.containsKey("deleted") && data["deleted"] == true);
+        })
         .map((doc) => _UserDAO.fromMap(doc.data()).toUser(doc.id))
         .toList();
   }
@@ -88,8 +92,7 @@ class FirestoreUserProvider extends UserProvider {
       throw Exception("User does not exist");
     }
 
-    final data = snapshot.data();
-    return _UserDAO.fromMap(data!).toUser(id);
+    return _UserDAO.fromMap(snapshot.data()!).toUser(id);
   }
 
   @override
@@ -102,6 +105,8 @@ class FirestoreUserProvider extends UserProvider {
   @override
   Future<void> deleteUserINTERNAL(User user) async {
     final users = _db.collection("users");
-    await users.doc(user.uid).delete();
+    await users.doc(user.uid).update({
+      "deleted": true
+    });
   }
 }

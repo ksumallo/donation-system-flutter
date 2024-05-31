@@ -10,10 +10,10 @@ class FirebaseStorageProvider extends CloudStorageProvider {
   FirebaseStorageProvider(this._storage);
 
   @override
-  Future<String> uploadFile(File file) async {
+  Future<String> uploadFile(File file, String path) async {
     return await _storage
         .ref()
-        .child(file.path)
+        .child(path)
         .putFile(File(file.path))
         .then((task) => task.ref.fullPath);
   }
