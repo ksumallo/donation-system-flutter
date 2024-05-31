@@ -121,7 +121,8 @@ class UserProfile extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const OrganizationList(),
+                                  builder: (context) =>
+                                      const OrganizationList(),
                                 ),
                               );
                             },
@@ -132,13 +133,15 @@ class UserProfile extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const CreateOrganizationPage(),
+                                  builder: (context) =>
+                                      const CreateOrganizationPage(),
                                 ),
                               );
                             },
-                            child: Text('Create Organization'),
+                            child: const Text('Create Organization'),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
