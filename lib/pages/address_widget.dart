@@ -10,7 +10,9 @@ class AddressWidget extends StatefulWidget {
 }
 
 class _AddressWidgetState extends State<AddressWidget> {
-  final List<TextEditingController> _addressControllers = [TextEditingController()];
+  final List<TextEditingController> _addressControllers = [
+    TextEditingController()
+  ];
 
   @override
   void dispose() {
@@ -28,18 +30,19 @@ class _AddressWidgetState extends State<AddressWidget> {
   }
 
   void _notifyAddressesChanged() {
-    final addresses = _addressControllers.map((controller) => controller.text).toList();
+    final addresses =
+        _addressControllers.map((controller) => controller.text).toList();
     widget.onAddressChanged(addresses);
   }
 
-  Widget _buildAddressField(TextEditingController controller) {
+  Widget _buildAddressField(int index) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
           Expanded(
             child: TextFormField(
-              controller: controller,
+              controller: _addressControllers[index],
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Address",
@@ -55,10 +58,16 @@ class _AddressWidgetState extends State<AddressWidget> {
               },
             ),
           ),
-          IconButton(
-            onPressed: _addAddressField,
-            icon: Icon(Icons.add),
-          ),
+          if (index != 0)
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _addressControllers.removeAt(index);
+                });
+                _notifyAddressesChanged();
+              },
+              icon: const Icon(Icons.remove),
+            ),
         ],
       ),
     );
@@ -68,8 +77,18 @@ class _AddressWidgetState extends State<AddressWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (var controller in _addressControllers)
-          _buildAddressField(controller),
+        for (int i = 0; i < _addressControllers.length; i++)
+          _buildAddressField(i),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              onPressed: _addAddressField,
+              icon: const Icon(Icons.add),
+            ),
+          ]
+        )
       ],
     );
   }
