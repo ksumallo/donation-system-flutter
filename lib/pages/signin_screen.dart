@@ -1,6 +1,7 @@
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 
@@ -19,25 +20,44 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthProvider>().logout();
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 100, horizontal: 30),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  heading,
-                  emailField,
-                  passwordField,
-                  showSignInErrorMessage ? signInErrorMessage : Container(),
-                  submitButton,
-                  signUpButton
-                ],
+      body: FutureBuilder(
+        future: context.watch<AuthProvider>().currentUser,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.popAndPushNamed(
+                context,
+                '/user-profile',
+                arguments: snapshot.data!,
+              );
+            });
+          }
+
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 100, horizontal: 30),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    heading,
+                    emailField,
+                    passwordField,
+                    showSignInErrorMessage ? signInErrorMessage : Container(),
+                    submitButton,
+                    signUpButton
+                  ],
+                ),
               ),
-            )),
+            ),
+          );
+        },
       ),
     );
   }
@@ -98,32 +118,29 @@ class _SignInPageState extends State<SignInPage> {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
           try {
-            User user = await context
-              .read<AuthProvider>()
-              .login(email!, password!);
-            if (mounted) Navigator.popAndPushNamed(context, "/user-profile", arguments: user);
-          }
-          on Exception catch (e) {
+            await context.read<AuthProvider>().login(email!, password!);
+          } on Exception catch (e) {
             print(e.toString());
           }
-          }
+        }
       },
       child: const Text("Sign In"));
-    Widget get signUpButton => Padding(
-            padding: const EdgeInsets.all(30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("No account yet?"),
-                TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpPage()));
-                    },
-                    child: const Text("Sign Up"))
-              ],
-            ),
-          );
+
+  Widget get signUpButton => Padding(
+        padding: const EdgeInsets.all(30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("No account yet?"),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()));
+                },
+                child: const Text("Sign Up"))
+          ],
+        ),
+      );
 }
