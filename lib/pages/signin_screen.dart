@@ -98,32 +98,33 @@ class _SignInPageState extends State<SignInPage> {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
           try {
-            User user = await context
-              .read<AuthProvider>()
-              .login(email!, password!);
-            if (mounted) Navigator.popAndPushNamed(context, "/user-profile", arguments: user);
-          }
-          on Exception catch (e) {
+            User user =
+                await context.read<AuthProvider>().login(email!, password!);
+            if (mounted)
+              Navigator.popAndPushNamed(context, "/user-profile",
+                  arguments: user);
+          } on Exception catch (e) {
             print(e.toString());
           }
-          }
+        }
       },
       child: const Text("Sign In"));
-    Widget get signUpButton => Padding(
-            padding: const EdgeInsets.all(30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("No account yet?"),
-                TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpPage()));
-                    },
-                    child: const Text("Sign Up"))
-              ],
-            ),
-          );
+
+  Widget get signUpButton => Padding(
+        padding: const EdgeInsets.all(30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("No account yet?"),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()));
+                },
+                child: const Text("Sign Up"))
+          ],
+        ),
+      );
 }

@@ -43,12 +43,19 @@ class _OrganizationAppState extends State<OrganizationApp> {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: [DonationsList(), OrganizationProfile(org: widget.org)][_currentPage],
+      body: [
+        DonationsList(),
+        OrganizationProfile(org: widget.org)
+      ][_currentPage],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
             label: 'Donations',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Drives',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.groups),

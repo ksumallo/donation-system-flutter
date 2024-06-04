@@ -25,10 +25,9 @@ class _SignUpState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Container(
-            margin: const EdgeInsets.all(30),
+            margin: const EdgeInsets.all(32),
             child: Form(
               key: _formKey,
               child: Column(
@@ -42,12 +41,12 @@ class _SignUpState extends State<SignUpPage> {
   }
 
   Widget get heading => const Padding(
-        padding: EdgeInsets.only(bottom: 30),
-        child: Text(
-          "Sign Up",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      );
+    padding: EdgeInsets.only(bottom: 32, top: 48),
+    child: Text(
+      "Sign Up",
+      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    ),
+  );
 
  Widget get emailField => Padding(
   padding: const EdgeInsets.only(bottom: 30),
@@ -96,7 +95,7 @@ class _SignUpState extends State<SignUpPage> {
   ),
 );
 
-  Widget get nameField => Padding(
+Widget get nameField => Padding(
   padding: const EdgeInsets.only(bottom: 30),
   child: TextFormField(
     controller: _nameController,

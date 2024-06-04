@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/api/firebase_auth_provider.dart';
 import 'package:final_proj/api/firebase_storage_api.dart';
 import 'package:final_proj/api/firestore_donation_provider.dart';
-import 'package:final_proj/api/firestore_user_provider.dart';
 import 'package:final_proj/api/firestore_organization_provider.dart';
+import 'package:final_proj/api/firestore_user_provider.dart';
 import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/firebase_options.dart';
@@ -14,18 +12,18 @@ import 'package:final_proj/pages/donate_page.dart';
 import 'package:final_proj/pages/organization_app.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:final_proj/pages/signin_screen.dart';
+import 'package:final_proj/pages/user_app.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 import 'package:final_proj/providers/cloud_storage_provider.dart';
 import 'package:final_proj/providers/donation_provider.dart';
 import 'package:final_proj/providers/organizations.dart';
 import 'package:final_proj/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:final_proj/pages/user_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,20 +94,19 @@ class _MyAppState extends State<MyApp> {
     contactNumber: '+63928191911',
   );
 
-
   // TODO: Remove dummy [Organization]
   final Organization dummyOrg = Organization(
-    id: 'someRandomIdAasdkjadh',
-    name: 'Test Org',
-    description: 'Lorem ipsum dolor sit amet, '
-        'consectetur adipiscing elit. '
-        'Donec vehicula nulla vitae rhoncus convallis. '
-        'Suspendisse tempor lectus vitae hendrerit finibus. '
-        'Etiam vitae egestas magna. Donec sed faucibus nibh. '
-        'Nulla odio metus, pretium vel nunc id, tempus condimentum lectus. '
-        'Sed aliquam lobortis nulla, sit amet porta quam gravida vitae. '
-        'Maecenas non ullamcorper elit, a venenatis eros. '
-        'Sed condimentum massa sit amet felis molestie venenatis.');
+      id: 'someRandomIdAasdkjadh',
+      name: 'Test Org',
+      description: 'Lorem ipsum dolor sit amet, '
+          'consectetur adipiscing elit. '
+          'Donec vehicula nulla vitae rhoncus convallis. '
+          'Suspendisse tempor lectus vitae hendrerit finibus. '
+          'Etiam vitae egestas magna. Donec sed faucibus nibh. '
+          'Nulla odio metus, pretium vel nunc id, tempus condimentum lectus. '
+          'Sed aliquam lobortis nulla, sit amet porta quam gravida vitae. '
+          'Maecenas non ullamcorper elit, a venenatis eros. '
+          'Sed condimentum massa sit amet felis molestie venenatis.');
 
   @override
   void initState() {
@@ -125,7 +122,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: false,
       ),
-      initialRoute: '/organization-dev',
+      initialRoute: '/organization',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
@@ -143,8 +140,7 @@ class _MyAppState extends State<MyApp> {
             );
           case '/user-profile':
             User user = settings.arguments as User;
-            return MaterialPageRoute(
-                builder: (context) => UserApp(user: user));
+            return MaterialPageRoute(builder: (context) => UserApp(user: user));
           case '/user-dev':
             return MaterialPageRoute(
               builder: (context) => UserApp(
