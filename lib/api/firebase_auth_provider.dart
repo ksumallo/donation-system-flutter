@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/providers/auth_provider.dart';
 import 'package:final_proj/providers/user_provider.dart';
@@ -33,10 +34,19 @@ class FirebaseAuthProvider extends AuthProvider {
       throw Exception("User already signed in");
     }
 
-    fb_auth.UserCredential credential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    fb_auth.UserCredential credential;
+
+    try {
+      credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseException catch (e) {
+      // FirebaseException.toString shows the error code too, which isn't ideal for user-facing
+      // widgets as it exposes implementation details.
+      // Painful to rethrow a new exception, but necessary to avoid exposing internals.
+      throw Exception(e.message);
+    }
 
     final uid = credential.user?.uid;
     if (uid == null) {

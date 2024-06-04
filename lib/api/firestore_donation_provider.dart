@@ -44,10 +44,12 @@ class _DonationDao {
     );
   }
 
-  Future<Donation> toDonation(String id,
-      UserProvider userProvider,
-      OrganizationProvider organizationProvider,
-      CloudStorageProvider cloudStorageProvider,) async {
+  Future<Donation> toDonation(
+    String id,
+    UserProvider userProvider,
+    OrganizationProvider organizationProvider,
+    CloudStorageProvider cloudStorageProvider,
+  ) async {
     final donor = await userProvider.getUserById(donorId);
     final recipient = await organizationProvider.getById(recipientId);
     final imageFile = await cloudStorageProvider.pickFile(imagePathCloud);
@@ -130,16 +132,18 @@ class FirestoreDonationProvider extends DonationProvider {
     required CloudStorageProvider cloudStorage,
     required UserProvider userProvider,
     required OrganizationProvider organizationProvider,
-  })
-      : _firestore = firestore,
+  })  : _firestore = firestore,
         _cloudStorage = cloudStorage,
         _userProvider = userProvider,
         _organizationProvider = organizationProvider;
 
   @override
   Future<void> addINTERNAL(Donation donation) async {
-    String imagePathCloud =
-    await _cloudStorage.uploadFile(File(donation.image.path));
+    final image = File(donation.image.path);
+    String imagePathCloud = await _cloudStorage.uploadFile(
+      image,
+      image.path.replaceFirst(image.parent.path, 'donation_image'),
+    );
     final dao = _DonationDao.fromDonation(donation, imagePathCloud);
 
     final docRef = _firestore.collection('donations').doc();
@@ -160,8 +164,8 @@ class FirestoreDonationProvider extends DonationProvider {
     }
 
     final docMap = docSnapshot.data()!;
-    final dao = _DonationDao.fromDonation(
-        donation, docMap['image_ref'] as String);
+    final dao =
+        _DonationDao.fromDonation(donation, docMap['image_ref'] as String);
 
     await docRef.update(dao.toMap());
   }
@@ -172,10 +176,11 @@ class FirestoreDonationProvider extends DonationProvider {
         .collection('donations')
         .where('donor_id', isEqualTo: donor.uid);
     final querySnapshot = await docRef.get();
-    final docs = querySnapshot.docs;
-    final daos = docs
-        .map((doc) => _DonationDao.fromMap(doc.data()))
-        .toList();
+    final docs = querySnapshot.docs.where((doc) {
+      final data = doc.data();
+      return !(data.containsKey("deleted") && data["deleted"] == true);
+    }).toList(growable: false);
+    final daos = docs.map((doc) => _DonationDao.fromMap(doc.data())).toList(growable: false);
 
     final ret = <Donation>[];
 
@@ -212,10 +217,11 @@ class FirestoreDonationProvider extends DonationProvider {
         .collection('donations')
         .where('recipient_id', isEqualTo: recipient.id);
     final querySnapshot = await docRef.get();
-    final docs = querySnapshot.docs;
-    final daos = docs
-        .map((doc) => _DonationDao.fromMap(doc.data()))
-        .toList();
+    final docs = querySnapshot.docs.where((doc) {
+      final data = doc.data();
+      return !(data.containsKey("deleted") && data["deleted"] == true);
+    }).toList(growable: false);
+    final daos = docs.map((doc) => _DonationDao.fromMap(doc.data())).toList(growable: false);
 
     final ret = <Donation>[];
 
@@ -278,9 +284,8 @@ class FirestoreDonationProvider extends DonationProvider {
 
   @override
   Future<void> removeINTERNAL(Donation donation) {
-    return _firestore
-        .collection('donations')
-        .doc(donation.id)
-        .delete();
+    return _firestore.collection('donations').doc(donation.id).update({
+      "deleted": true
+    });
   }
 }

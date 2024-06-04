@@ -1,7 +1,15 @@
+
 import 'package:final_proj/components/profile_info_tile.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
+import '../entities/user.dart';
+import '../providers/auth_provider.dart';
+import 'organization_list.dart';
+import 'create_organization_page.dart';
 
 class UserProfile extends StatelessWidget {
   final User user;
