@@ -1,20 +1,18 @@
+import 'dart:developer';
 
-import 'package:final_proj/components/profile_info_tile.dart';
+import 'package:final_proj/entities/organization.dart';
 import 'package:final_proj/entities/user.dart';
 import 'package:final_proj/pages/organization_list.dart';
+import 'package:final_proj/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import '../entities/user.dart';
-import '../providers/auth_provider.dart';
-import 'organization_list.dart';
-import 'create_organization_page.dart';
 
-class UserProfile extends StatelessWidget {
-  final User user;
+import '../components/profile_info_tile.dart';
 
-  const UserProfile({super.key, required this.user});
+class OrganizationProfile extends StatelessWidget {
+  final Organization org;
+
+  const OrganizationProfile({super.key, required this.org});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,7 @@ class UserProfile extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  Padding(
+                  const Padding(
                       padding: EdgeInsets.only(right: 12),
                       child: Icon(
                           Icons.account_circle,
@@ -39,14 +37,11 @@ class UserProfile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.name,
+                        org.name,
                         style: TextStyle(
                             fontSize:
-                                Theme.of(context).textTheme.titleLarge!.fontSize,
+                            Theme.of(context).textTheme.titleLarge!.fontSize,
                             fontWeight: FontWeight.bold),
-                      ),
-                      Text(user.username,
-                        style: const TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
@@ -69,9 +64,7 @@ class UserProfile extends StatelessWidget {
           ListView(
             shrinkWrap: true,
             children: [
-              ...user.addresses.asMap().entries.map((address) =>
-                ProfileInfoTile(label: 'Address ${address.key+1}', value: address.value)),
-              ProfileInfoTile(label: "Contact", value: user.contactNumber)
+              ProfileInfoTile(label: "Description", value: org.description)
             ],
           ),
           // const Row(
@@ -104,4 +97,64 @@ class UserProfile extends StatelessWidget {
       ),
     );
   }
+  //   return Padding(
+  //     padding: const EdgeInsets.all(8.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         // Existing content
+  //         Card.outlined(
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Row(
+  //               children: [
+  //                 const Icon(Icons.account_circle, size: 56),
+  //                 Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.center,
+  //                   children: [
+  //                     Text(
+  //                       org.name,
+  //                       style: TextStyle(
+  //                           fontSize:
+  //                               Theme.of(context).textTheme.bodyLarge!.fontSize,
+  //                           fontWeight: FontWeight.bold),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         const Chip(
+  //           avatar: Icon(Icons.home),
+  //           label: Text('Addresses:'),
+  //         ),
+  //         const Row(
+  //           children: [
+  //             Icon(Icons.phone, size: 24),
+  //             SizedBox(width: 8),
+  //             Text(
+  //               'Contact Number:',
+  //               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //             ),
+  //           ],
+  //         ),
+  //         // additional donate button
+  //         Expanded(
+  //           child: ElevatedButton(
+  //             onPressed: () {
+  //               Navigator.push(
+  //                 context,
+  //                 MaterialPageRoute(
+  //                   builder: (context) => const OrganizationList(),
+  //                 ),
+  //               );
+  //             },
+  //             child: Text('Get verified'),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

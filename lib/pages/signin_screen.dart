@@ -113,6 +113,22 @@ class _SignInPageState extends State<SignInPage> {
         ),
       );
 
+  Widget get submitButton => ElevatedButton(
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          _formKey.currentState!.save();
+          try {
+            User user =
+                await context.read<AuthProvider>().login(email!, password!);
+            if (mounted)
+              Navigator.popAndPushNamed(context, "/user-profile",
+                  arguments: user);
+          } on Exception catch (e) {
+            print(e.toString());
+          }
+        }
+      },
+      child: const Text("Sign In"));
   String _errorString = "";
 
   Widget get submitButton => Column(
